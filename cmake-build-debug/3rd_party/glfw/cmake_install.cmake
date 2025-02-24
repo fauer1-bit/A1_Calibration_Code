@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/3rd_party/glfw
+# Install script for directory: C:/Users/markv/Desktop/TUDelft/Q3/Photogrammetry and 3D computer vision/As1/A1_code/3rd_party/glfw
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/A1_Calibration_Code")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/A1_code")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -32,14 +32,9 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-# Set default install directory permissions.
-if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Program Files/JetBrains/CLion 2024.2.2/bin/mingw/bin/objdump.exe")
-endif()
-
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug/3rd_party/glfw/src/cmake_install.cmake")
+  include("C:/Users/markv/Desktop/TUDelft/Q3/Photogrammetry and 3D computer vision/As1/A1_code/cmake-build-debug/3rd_party/glfw/src/cmake_install.cmake")
 
 endif()
 
