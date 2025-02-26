@@ -217,25 +217,47 @@ bool Calibration::calibration(
 
     for (int i = 0; i < matrix_length; ++i)
     {
-        const double u = points_2d[j][0];
-        const double v = points_2d[j][1];
+        double u = points_2d[j][0];
+        double v = points_2d[j][1];
 
         const double X = points_3d[j][0];
         const double Y = points_3d[j][1];
         const double Z = points_3d[j][2];
 
         j = j + 1;
+        u = u * -1.0;
+        v = v * -1.0;
 
         std::cout << "u & v in i1: " << i << u * -1 << v * -1 << std::endl;
 
-        std::cout << "1: " << P[0][i] + X << " 2: " << P[1][i] + Y << " 3: " << P[2][i] + Z << " 4: " << P[3][i] + 1.0 << std::endl;
-        std::cout << "8: " << P[8][i] + u*X << " 9: " << P[9][i] + u*Y << " 10: " << P[10][i] + u*Z << " 11: " << P[11][i] + u << std::endl;
+        P[i][0] = X;
+        P[i][1] = Y;
+        P[i][2] = Z;
+        P[i][3] = 1.0;
+
+        P[i][8] = u * X;
+        P[i][9] = u * Y;
+        P[i][10] = u * Z;
+        P[i][11] = u;
+
+        //std::cout << "1: " << P[0][i] + X << " 2: " << P[1][i] + Y << " 3: " << P[2][i] + Z << " 4: " << P[3][i] + 1.0 << std::endl;
+        //std::cout << "8: " << P[8][i] + u*X << " 9: " << P[9][i] + u*Y << " 10: " << P[10][i] + u*Z << " 11: " << P[11][i] + u << std::endl;
 
         i = i + 1;
-        std::cout << "i2: " << i << std::endl;
+        //std::cout << "i2: " << i << std::endl;
 
-        std::cout << "4: " << P[4][i] + X <<" 5: " <<  P[5][i] + Y <<" 6: " <<  P[6][i] + Z <<" 7: " <<  P[7][i] + 1.0 << std::endl;
-        std::cout << "8: " << P[8][i] + v*X << " 9: " << P[9][i] + v*Y <<" 10: " <<  P[10][i] + v*Z << " 11: " <<  P[11][i] + v << std::endl;
+        P[i][4] = X;
+        P[i][5] = Y;
+        P[i][6] = Z;
+        P[i][7] = 1.0;
+
+        P[i][8] = v * X;
+        P[i][9] = v * Y;
+        P[i][10] = v * Z;
+        P[i][11] = v;
+
+        //std::cout << "4: " << P[4][i] + X <<" 5: " <<  P[5][i] + Y <<" 6: " <<  P[6][i] + Z <<" 7: " <<  P[7][i] + 1.0 << std::endl;
+        //std::cout << "8: " << P[8][i] + v*X << " 9: " << P[9][i] + v*Y <<" 10: " <<  P[10][i] + v*Z << " 11: " <<  P[11][i] + v << std::endl;
     }
 
     std::cout << "matrix looks as follows: " << std::endl;
@@ -248,9 +270,32 @@ bool Calibration::calibration(
     //   Optional: you can check if your M is correct by applying M on the 3D points. If correct, the projected point
     //             should be very close to your input images points.
 
+    // SVD --> A = UDV^T --> P = UDV^T = (2n x 2n) (2n x 12) (12 x 12)
+    // p = MP = K [R t]P
+
+    Matrix U(matrix_length, matrix_length, 0.0);   // initialized with 0s
+    Matrix D(matrix_length, 12, 0.0);   // initialized with 0s
+    Matrix V(12, 12, 0.0);   // initialized with 0s
+
+    svd_decompose(P,U,D,V);
+
+    Vector m = V.get_column(V.cols()-1); // get m from last row of V
+
+    Matrix34 M;
+
+    M.set_row(0,{m[0],m[1],m[2],m[3]});
+    M.set_row(1,{m[4],m[5],m[6],m[7]});
+    M.set_row(2,{m[8],m[9],m[10],m[11]});
+
+    std::cout << "M: \n" << M << std::endl;
+
     // TODO: extract intrinsic parameters from M.
 
+    // Intrinsic is K
+
     // TODO: extract extrinsic parameters from M.
+
+    // Extrinsic is [R t]
 
     // TODO: make sure the recovered parameters are passed to the corresponding variables (fx, fy, cx, cy, s, R, and t)
 
