@@ -214,13 +214,26 @@ bool Calibration::calibration(
 
     const int correspondences_p = points_3d.size(), mp_length = 2 * correspondences_p;
 
-    MatrixP P(mp_length, 12, 0.0); // matrix P has length of m = 2*points and width of 12. (12 *12)
+    Matrix P(mp_length, 12, 0.0); // matrix P has length of m = 2*points and width of 12. (12 *12)
 
-    for (int i = 0; i < mp_length; i++) {
+    for (int i = 0; i < correspondences_p; i++) {
 
-        double u = points_2d[0][0];
-        double v = points_2d[0][1];
-        const double X = points_3d
+        // set point variables for 3d (X,Y,Z) and for 2d (image plane) (u,v)
+        const double u = -points_2d[i][0]; //set to negative
+        const double v = -points_2d[i][1]; //set to negative
+        const double X = points_3d[i][0];
+        const double Y = points_3d[i][1];
+        const double Z = points_3d[i][2];
+
+        //assign the values of the points to the variables in the matrix
+        // set row and then loop over in pairs of 2
+
+        //row 1 (i * 2) at 0 = 0, at i = 1, skips row1 and moves automatically to row 2...
+        P.set_row(i*2, {X, Y, Z, 1.0, 0.0, 0.0, 0.0, 0.0, u * X, u * Y, u * Z, u});
+
+        //row 2 (i * 2 + 1), always next after row 1..
+        P.set_row(i*2+1, {X, Y, Z, 1.0, 0.0, 0.0, 0.0, 0.0, v * X, v * Y, v * Z, v});
+
     }
 
 
