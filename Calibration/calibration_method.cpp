@@ -200,9 +200,29 @@ bool Calibration::calibration(
                  "\t\t- t: a 3D vector encoding camera location.\n"
                  "\tIMPORTANT: don't forget to write your recovered parameters to the above variables." << std::endl;
 
+
     // TODO: check if input is valid (e.g., number of correspondences >= 6, sizes of 2D/3D points must match)
 
+    if (points_3d.size() < 6 || points_2d.size() < 6 || points_3d.size() != points_2d.size()) {
+        std::cerr << "Invalid input: need at least 6 correspondences and 3D and 2D size must match" << std::endl;
+        return false;
+    }
+
     // TODO: construct the P matrix (so P * m = 0).
+
+    // The p matrix is a 12*12 matrix if we use 6 correspondences, otherwise it yields 2n homogeneous linear equations, which make it a 2n*12 where n = correspondences
+
+    const int correspondences_p = points_3d.size(), mp_length = 2 * correspondences_p;
+
+    MatrixP P(mp_length, 12, 0.0); // matrix P has length of m = 2*points and width of 12. (12 *12)
+
+    for (int i = 0; i < mp_length; i++) {
+
+        double u = points_2d[0][0];
+        double v = points_2d[0][1];
+        const double X = points_3d
+    }
+
 
     // TODO: solve for M (the whole projection matrix, i.e., M = K * [R, t]) using SVD decomposition.
     //   Optional: you can check if your M is correct by applying M on the 3D points. If correct, the projected point
@@ -219,18 +239,6 @@ bool Calibration::calibration(
                  "\t\tif your calibration is successful or not.\n\n" << std::flush;
     return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
