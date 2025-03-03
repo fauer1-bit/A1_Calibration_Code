@@ -279,11 +279,43 @@ bool Calibration::calibration(
 
     // TODO: extract intrinsic parameters from M.
 
+    double rho = 1.0 / a3.norm();
+    double rho_squared = rho * rho;
+
+    cx = rho_squared * dot(a1, a2);
+    cy = rho_squared * dot(a2, a3);
+
+    double cos_theta = -dot(cross(a1, a3), cross(a2, a3)) / (cross(a1, a3).norm() * cross(a2, a3).norm());
+    double sin_theta = sqrt(1.0 - cos_theta * cos_theta);
+
+    fx = rho_squared * cross(a1, a3).norm());
+    fy = rho_squared * cross(a2, a3).norm() / sin_theta;
+    s = -fx * cos_theta;
+
 
 
     // TODO: extract extrinsic parameters from M.
 
+    double rho = 1.0 /a3.norm();
+
+    Vector3D r1 = cross(a2, a3).normalize();
+    Vector3D r3 = rho * a3;
+    Vector3D r2 = cross(r3, r1);
+
+
     // TODO: make sure the recovered parameters are passed to the corresponding variables (fx, fy, cx, cy, s, R, and t)
+
+
+
+
+    std::cout << "Intrinsic parameters:" << std::endl;
+    std::cout << "fx: " << fx << ", fy: " << fy << std::endl;
+    std::cout << "cx: " << cx << ", cy: " << cy << std::endl;
+    std::cout << "s: " << s << std::endl;
+
+    std::cout << "Extrinsic parameters:" << std::endl;
+    std::cout << "R:\n" << R << std::endl;
+    std::cout << "t: " << t << std::endl;
 
     std::cout << "\n\tTODO: After you implement this function, please return 'true' - this will trigger the viewer to\n"
                  "\t\tupdate the rendering using your recovered camera parameters. This can help you to visually check\n"
