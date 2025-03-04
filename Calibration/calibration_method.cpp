@@ -24,6 +24,8 @@
 
 #include "calibration.h"
 #include "matrix_algo.h"
+#include <iostream>
+
 
 
 using namespace easy3d;
@@ -213,7 +215,6 @@ bool Calibration::calibration(
     // The p matrix is a 12*12 matrix if we use 6 correspondences, otherwise it yields 2n homogeneous linear equations, which make it a 2n*12 where n = correspondences
 
     const int correspondences_p = points_3d.size(), mp_length = 2 * correspondences_p;
-
     Matrix P(mp_length, 12, 0.0); // matrix P has length of m = 2*points and width of 12. (12 *12)
 
     for (int i = 0; i < correspondences_p; i++) {
@@ -228,12 +229,8 @@ bool Calibration::calibration(
         //assign the values of the points to the variables in the matrix
         // set row and then loop over in pairs of 2
 
-        //row 1 (i * 2) at 0 = 0, at i = 1, skips row1 and moves automatically to row 2...
-        P.set_row(i*2, {X, Y, Z, 1.0, 0.0, 0.0, 0.0, 0.0, u * X, u * Y, u * Z, u});
-
-        //row 2 (i * 2 + 1), always next after row 1..
-        P.set_row(i*2+1, {X, Y, Z, 1.0, 0.0, 0.0, 0.0, 0.0, v * X, v * Y, v * Z, v});
-
+        P.set_row(i*2,   {X,     Y,     Z,     1.0, 0.0, 0.0, 0.0, 0.0, u * X, u * Y, u * Z, u});
+        P.set_row(i*2+1, {0.0, 0.0, 0.0, 0.0, X,     Y,     Z,     1.0, v * X, v * Y, v * Z, v});
     }
 
     // Check matrix
@@ -242,16 +239,15 @@ bool Calibration::calibration(
         std::cout << "\tRow " << i << ": " << P.get_row(i) << std::endl;
     }
 
-
     // TODO: solve for M (the whole projection matrix, i.e., M = K * [R, t]) using SVD decomposition.
     //   Optional: you can check if your M is correct by applying M on the 3D points. If correct, the projected point
     //             should be very close to your input images points.
     // let P = UDV^T, set m equal to the lac column of V. (where
 
     // Matrix U, D and V initialise for SVD on matrix P
-    Matrix U(mp_length, mp_length);
-    Matrix D(mp_length, 12); // diagonal matrix
-    Matrix V(12, 12);
+    Matrix U(mp_length, mp_length, 0.0);
+    Matrix D(mp_length, 12, 0.0); // diagonal matrix
+    Matrix V(12, 12, 0.0);
 
     svd_decompose(P, U, D, V);
 
@@ -273,40 +269,52 @@ bool Calibration::calibration(
     Vector3D a1(M[0][0], M[0][1], M[0][2]);
     Vector3D a2(M[1][0], M[1][1], M[1][2]);
     Vector3D a3(M[2][0], M[2][1], M[2][2]);
-
     Vector3D b(M[0][3], M[1][3], M[2][3]);
 
 
     // TODO: extract intrinsic parameters from M.
 
-    double rho = 1.0 / a3.norm();
+    double rho = 1.0 / a3.length();
     double rho_squared = rho * rho;
 
-    cx = rho_squared * dot(a1, a2);
+    cx = rho_squared * dot(a1, a3);
     cy = rho_squared * dot(a2, a3);
 
-    double cos_theta = -dot(cross(a1, a3), cross(a2, a3)) / (cross(a1, a3).norm() * cross(a2, a3).norm());
-    double sin_theta = sqrt(1.0 - cos_theta * cos_theta);
+    Vector3D cross_a1a3 = cross(a1, a3);
+    Vector3D cross_a2a3 = cross(a2, a3);
+    double cos_theta = -dot(cross_a1a3, cross_a2a3) / (cross_a1a3.length() * cross_a2a3.length());
+    double sin_theta = std::sqrt(1.0 - cos_theta * cos_theta);
 
-    fx = rho_squared * cross(a1, a3).norm());
-    fy = rho_squared * cross(a2, a3).norm() / sin_theta;
+    fx = rho_squared * cross_a1a3.length();
+    fy = rho_squared * cross_a2a3.length() / sin_theta;
     s = -fx * cos_theta;
-
 
 
     // TODO: extract extrinsic parameters from M.
 
-    double rho = 1.0 /a3.norm();
-
-    Vector3D r1 = cross(a2, a3).normalize();
+    Vector3D r1 = cross_a2a3.normalize();
     Vector3D r3 = rho * a3;
     Vector3D r2 = cross(r3, r1);
 
 
     // TODO: make sure the recovered parameters are passed to the corresponding variables (fx, fy, cx, cy, s, R, and t)
 
+    R = Matrix33(
+        r1[0], r1[1], r1[2],
+        r2[0], r2[1], r2[2],
+        r3[0], r3[1], r3[2]
+    );
 
+    Matrix33 K(
+        fx, s, cx,
+        0, fy, cy,
+        0, 0, 1
+    );
 
+    Matrix33 K_inv;
+    inverse(K, K_inv);
+
+    t = rho * K_inv * b;
 
     std::cout << "Intrinsic parameters:" << std::endl;
     std::cout << "fx: " << fx << ", fy: " << fy << std::endl;
@@ -317,10 +325,7 @@ bool Calibration::calibration(
     std::cout << "R:\n" << R << std::endl;
     std::cout << "t: " << t << std::endl;
 
-    std::cout << "\n\tTODO: After you implement this function, please return 'true' - this will trigger the viewer to\n"
-                 "\t\tupdate the rendering using your recovered camera parameters. This can help you to visually check\n"
-                 "\t\tif your calibration is successful or not.\n\n" << std::flush;
-    return false;
+    return true;
 }
 
 
