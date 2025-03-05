@@ -1,27 +1,89 @@
-"M:\Program Files\CLion 2024.2.2\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "NMake Makefiles" -S "C:\Users\markv\Desktop\TUDelft\Q3\Photogrammetry and 3D computer vision\As1\A1_code" -B "C:\Users\markv\Desktop\TUDelft\Q3\Photogrammetry and 3D computer vision\As1\A1_code\cmake-build-debug"
--- The C compiler identification is MSVC 19.41.34123.0
--- The CXX compiler identification is MSVC 19.41.34123.0
+"C:\Program Files\JetBrains\CLion 2024.2.2\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.2.2/bin/ninja/win/x64/ninja.exe" -G Ninja -S "C:\Users\auerf\OneDrive - Delft University of Technology\Msc. Geomatics\3D computer vision and photogrammetry\A1_Calibration\A1_Calibration_Code" -B "C:\Users\auerf\OneDrive - Delft University of Technology\Msc. Geomatics\3D computer vision and photogrammetry\A1_Calibration\A1_Calibration_Code\cmake-build-debug"
+-- The C compiler identification is GNU 13.1.0
+-- The CXX compiler identification is GNU 13.1.0
 -- Detecting C compiler ABI info
+CMake Warning in C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-bdkdj0/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-bdkdj0/CMakeFiles/cmTC_0a253.dir/./
+
+  has 233 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    CMakeCCompilerABI.c.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
 -- Detecting C compiler ABI info - done
--- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.41.34120/bin/Hostx64/x64/cl.exe - skipped
+-- Check for working C compiler: C:/Program Files/JetBrains/CLion 2024.2.2/bin/mingw/bin/gcc.exe - skipped
 -- Detecting C compile features
 -- Detecting C compile features - done
 -- Detecting CXX compiler ABI info
+CMake Warning in C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-num8b4/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-num8b4/CMakeFiles/cmTC_c808c.dir/./
+
+  has 233 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    CMakeCXXCompilerABI.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
 -- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.41.34120/bin/Hostx64/x64/cl.exe - skipped
+-- Check for working CXX compiler: C:/Program Files/JetBrains/CLion 2024.2.2/bin/mingw/bin/g++.exe - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
 -- Easy3D: I'am working on a 64-bit Windows
 -- Found OpenGL: opengl32
 -- OpenGL libraries: opengl32;glu32
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
--- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
--- Looking for pthread_create in pthreads
--- Looking for pthread_create in pthreads - not found
--- Looking for pthread_create in pthread
--- Looking for pthread_create in pthread - not found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
 -- Found Threads: TRUE
+-- Looking for dinput.h
+CMake Warning in C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-1ifknv/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-1ifknv/CMakeFiles/cmTC_9386e.dir/./
+
+  has 233 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    CheckIncludeFile.c.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+-- Looking for dinput.h - found
+-- Looking for xinput.h
+CMake Warning in C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-0ujbql/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-0ujbql/CMakeFiles/cmTC_f44ab.dir/./
+
+  has 233 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    CheckIncludeFile.c.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+-- Looking for xinput.h - found
+-- Performing Test _GLFW_HAS_DEP
+-- Performing Test _GLFW_HAS_DEP - Success
+-- Performing Test _GLFW_HAS_ASLR
+-- Performing Test _GLFW_HAS_ASLR - Success
+-- Performing Test _GLFW_HAS_64ASLR
+-- Performing Test _GLFW_HAS_64ASLR - Success
 -- Using Win32 for window creation
--- Configuring done (8.5s)
--- Generating done (0.3s)
--- Build files have been written to: C:/Users/markv/Desktop/TUDelft/Q3/Photogrammetry and 3D computer vision/As1/A1_code/cmake-build-debug
+-- Configuring done (11.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/auerf/OneDrive - Delft University of Technology/Msc. Geomatics/3D computer vision and photogrammetry/A1_Calibration/A1_Calibration_Code/cmake-build-debug
