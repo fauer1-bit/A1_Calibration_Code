@@ -185,7 +185,7 @@ bool Calibration::calibration(
     cy = reau2 * dot(a2,a3);
 
     std::cout << "cx: " << cx << "\n" << std::endl;
-    std::cout << "cy: " << cy << "\n" << std::end;
+    std::cout << "cy: " << cy << "\n" << std::endl;
 
     // Formula says dot product, but program does not take dot product on 1x1 vector, so that is why * is used
     double cos_angle = -1 * (dot(cross(a1,a3),cross(a2,a3)) / (cross(a1,a3).norm() * cross(a2,a3).norm()));
