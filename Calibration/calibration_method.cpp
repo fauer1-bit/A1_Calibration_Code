@@ -242,7 +242,7 @@ bool Calibration::calibration(
     // TODO: solve for M (the whole projection matrix, i.e., M = K * [R, t]) using SVD decomposition.
     //   Optional: you can check if your M is correct by applying M on the 3D points. If correct, the projected point
     //             should be very close to your input images points.
-    // let P = UDV^T, set m equal to the lac column of V. (where
+    // let P = UDV^T, set m equal to the last column of V.
 
     // Matrix U, D and V initialise for SVD on matrix P
     Matrix U(mp_length, mp_length, 0.0);
