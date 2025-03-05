@@ -283,16 +283,16 @@ bool Calibration::calibration(
     Vector3D cross_a1a3 = cross(a1, a3);
     Vector3D cross_a2a3 = cross(a2, a3);
     double cos_theta = -dot(cross_a1a3, cross_a2a3) / (cross_a1a3.length() * cross_a2a3.length());
-    double sin_theta = std::sqrt(1.0 - cos_theta * cos_theta);
+    double sin_theta = std::sqrt(1.0 - cos_theta * cos_theta); //fundamental trig identity.
 
-    fx = rho_squared * cross_a1a3.length();
+    fx = rho_squared * cross_a1a3.length() * sin_theta;
     fy = rho_squared * cross_a2a3.length() / sin_theta;
-    s = -fx * cos_theta;
+    s = -fx * cos_theta / sin_theta;
 
 
     // TODO: extract extrinsic parameters from M.
 
-    Vector3D r1 = cross_a2a3.normalize();
+    Vector3D r1 = cross_a2a3 / cross_a2a3.norm();
     Vector3D r3 = rho * a3;
     Vector3D r2 = cross(r3, r1);
 
@@ -327,8 +327,4 @@ bool Calibration::calibration(
 
     return true;
 }
-
-
-
-
 
