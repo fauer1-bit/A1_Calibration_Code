@@ -96,52 +96,27 @@ bool Calibration::calibration(
 
     // TODO: construct the P matrix (so P * m = 0).
 
-    const int n = points_3d.size();
-    const int matrix_length = n * 2;
+    const int correspondences_p = points_3d.size(), mp_length = 2 * correspondences_p;
+    Matrix P(mp_length, 12, 0.0); // matrix P has length of m = 2*points and width of 12. (12 *12)
 
-    Matrix P(matrix_length, 12, 0.0); // 12x12
+    for (int i = 0; i < correspondences_p; i++) {
 
-    int j = 0;
+        // set point variables for 3d (X,Y,Z) and for 2d (image plane) (u,v)
+        const double u = -points_2d[i][0]; //set to negative
+        const double v = -points_2d[i][1]; //set to negative
+        const double X = points_3d[i][0];
+        const double Y = points_3d[i][1];
+        const double Z = points_3d[i][2];
 
-    for (int i = 0; i < matrix_length; ++i)
-    {
-        double u = points_2d[j][0];
-        double v = points_2d[j][1];
+        //assign the values of the points to the variables in the matrix
+        // set row and then loop over in pairs of 2
 
-        const double X = points_3d[j][0];
-        const double Y = points_3d[j][1];
-        const double Z = points_3d[j][2];
-
-        j = j + 1;
-
-        u = u * -1.0;
-        v = v * -1.0;
-
-        P[i][0] = X;
-        P[i][1] = Y;
-        P[i][2] = Z;
-        P[i][3] = 1.0;
-
-        P[i][8] = u * X;
-        P[i][9] = u * Y;
-        P[i][10] = u * Z;
-        P[i][11] = u;
-
-        i = i + 1;
-
-        P[i][4] = X;
-        P[i][5] = Y;
-        P[i][6] = Z;
-        P[i][7] = 1.0;
-
-        P[i][8] = v * X;
-        P[i][9] = v * Y;
-        P[i][10] = v * Z;
-        P[i][11] = v;
+        P.set_row(i*2,   {X,     Y,     Z,     1.0, 0.0, 0.0, 0.0, 0.0, u * X, u * Y, u * Z, u});
+        P.set_row(i*2+1, {0.0, 0.0, 0.0, 0.0, X,     Y,     Z,     1.0, v * X, v * Y, v * Z, v});
     }
 
     std::cout << "matrix looks as follows: " << std::endl;
-    for (int i=0; i<matrix_length; ++i) {
+    for (int i=0; i < mp_length; ++i) {
         std::cout << "\t" << i << ": " << P.get_row(i) << std::endl;
     }
 
@@ -153,8 +128,8 @@ bool Calibration::calibration(
     // SVD --> A = UDV^T --> P = UDV^T = (2n x 2n) (2n x 12) (12 x 12)
     // p = MP = K [R t]P
 
-    Matrix U(matrix_length, matrix_length, 0.0);   // initialized with 0s
-    Matrix D(matrix_length, 12, 0.0);   // initialized with 0s
+    Matrix U(mp_length,mp_length, 0.0);   // initialized with 0s
+    Matrix D(mp_length, 12, 0.0);   // initialized with 0s
     Matrix V(12, 12, 0.0);   // initialized with 0s
 
     svd_decompose(P,U,D,V);
@@ -175,14 +150,13 @@ bool Calibration::calibration(
 
     // TODO: extract intrinsic parameters from M.
 
-    // DOES NOT HANGLE SIGN OF p YET !!!!
-    double reau = 1 / a3.norm();
-    double reau2 = reau * reau;
+    double rho = 1 / a3.norm();
+    double rho_squared = rho * rho;
 
-    std::cout << "reau: " << reau << "\n" << std::endl;
+    std::cout << "rho: " << rho << "\n" << std::endl;
 
-    cx = reau2 * dot(a1,a3);
-    cy = reau2 * dot(a2,a3);
+    cx = rho_squared * dot(a1,a3);
+    cy = rho_squared * dot(a2,a3);
 
     std::cout << "cx: " << cx << "\n" << std::endl;
     std::cout << "cy: " << cy << "\n" << std::endl;
@@ -194,8 +168,8 @@ bool Calibration::calibration(
     std::cout << "cos_angle: " << cos_angle << "\n" << std::endl;
     std::cout << "sin_angle: " << sin_angle << "\n" << std::endl;
 
-    double alpha = reau2 * cross(a1,a3).norm() * sin_angle;
-    double beta = reau2 * cross(a2,a3).norm() * sin_angle;
+    double alpha = rho_squared * cross(a1,a3).norm() * sin_angle;
+    double beta = rho_squared * cross(a2,a3).norm() * sin_angle;
 
     std::cout << "alpha: " << alpha << "\n" << std::endl;
     std::cout << "beta: " << beta << "\n" << std::endl;
@@ -203,7 +177,7 @@ bool Calibration::calibration(
     // TODO: extract extrinsic parameters from M.
 
     Vector3D r1 = cross(a2,a3) / cross(a2,a3).norm();
-    Vector3D r3 = reau * a3;
+    Vector3D r3 = rho * a3;
     Vector3D r2 = cross(r3,r1);
 
     std::cout << "r1: " << r1 << "\n" << std::endl;
@@ -228,7 +202,7 @@ bool Calibration::calibration(
 
     std::cout << "K " << K << std::endl;
 
-    t= reau * inverse(K) * b;
+    t= rho * inverse(K) * b;
 
     std::cout << "t: " << t << std::endl;
 
